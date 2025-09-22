@@ -1,0 +1,88 @@
+
+class Candidato:
+    def __init__(self, nombre, partido):
+        self.nombre = nombre
+        self.partido = partido
+        self.votos = 0
+
+    def __str__(self):
+        return f"{self.nombre} ({self.partido}) - Votos: {self.votos}"
+
+
+class Eleccion:
+    def __init__(self, nombre_eleccion):
+        self.nombre_eleccion = nombre_eleccion
+        self.candidatos = []
+
+    def agregar_candidato(self, candidato):
+        if any(c.nombre.lower() == candidato.nombre.lower() for c in self.candidatos):
+            print("Ya existe un candidato con ese nombre.")
+        else:
+            self.candidatos.append(candidato)
+            print("Candidato agregado correctamente.")
+
+    def votar(self, nombre_candidato):
+        for candidato in self.candidatos:
+            if candidato.nombre.lower() == nombre_candidato.lower():
+                candidato.votos += 1
+                print(f"Voto registrado para {candidato.nombre}.")
+                return
+        print("Candidato no encontrado.")
+
+    def mostrar_resultados(self):
+        print(f"\nResultados de la elección: {self.nombre_eleccion}")
+        for candidato in self.candidatos:
+            print(candidato)
+
+    def ganador(self):
+        if not self.candidatos:
+            print("No hay candidatos registrados.")
+            return
+        ganador = max(self.candidatos, key=lambda c: c.votos)
+        print(f"\nEl ganador hasta ahora es: {ganador.nombre} ({ganador.partido}) con {ganador.votos} votos.")
+
+
+def menu():
+    eleccion = Eleccion("Elección Estudiantil")
+
+    # Agregar candidatos iniciales
+    eleccion.agregar_candidato(Candidato("Perla", "Partido Rosa"))
+    eleccion.agregar_candidato(Candidato("Óscar", "Partido Azul"))
+    eleccion.agregar_candidato(Candidato("Marcos", "Partido Verde"))
+
+    while True:
+        print("\n--- MENÚ ---")
+        print("1. Agregar candidato")
+        print("2. Votar por un candidato")
+        print("3. Mostrar resultados")
+        print("4. Consultar ganador")
+        print("5. Salir")
+
+        opcion = input("Selecciona una opción: ")
+
+        if opcion == "1":
+            nombre = input("Nombre del candidato: ")
+            partido = input("Partido del candidato: ")
+            nuevo_candidato = Candidato(nombre, partido)
+            eleccion.agregar_candidato(nuevo_candidato)
+
+        elif opcion == "2":
+            nombre = input("Nombre del candidato por el que deseas votar: ")
+            eleccion.votar(nombre)
+
+        elif opcion == "3":
+            eleccion.mostrar_resultados()
+
+        elif opcion == "4":
+            eleccion.ganador()
+
+        elif opcion == "5":
+            print("Gracias por usar el sistema de votación.")
+            break
+
+        else:
+            print("Opción inválida. Intenta de nuevo.")
+
+
+if __name__ == "__main__":
+    menu()
